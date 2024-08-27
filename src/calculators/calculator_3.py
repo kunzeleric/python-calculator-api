@@ -2,6 +2,7 @@ from flask import request as FlaskRequest
 from typing import Dict, List
 from src.drivers.numpy_handler import NumpyHandler
 from src.drivers.interfaces.driver_handler_interface import DriverHandlerInterface
+from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError
 
 class Calculator3:
     def __init__(self, driver_handler: DriverHandlerInterface) -> None:
@@ -19,7 +20,7 @@ class Calculator3:
 
     def __validate_body(self, body: Dict) -> List[float]:
         if "numbers" not in body:
-            raise Exception("Missing 'numbers' field in request body")
+            raise HttpUnprocessableEntityError("Missing 'numbers' field in request body")
         input_data = body.get("numbers")
         return input_data
     
