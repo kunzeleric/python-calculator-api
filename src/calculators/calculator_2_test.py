@@ -14,6 +14,8 @@ class MockDriverHandler(DriverHandlerInterface):
         return 3 # returns a random number
     def variance(self, numbers: List[float]) -> float:
         return 5 # returns a random number
+    def average(self, numbers: List[float]) -> float:
+        return 3 # returns a random number
 
 def test_calculate_integration():
     mock_request = MockRequest({"numbers": [2.12, 4.23, 1.56]})

@@ -1,6 +1,6 @@
 from typing import Dict, List
 from pytest import raises
-from .calculator_3 import Calculator3
+from .calculator_4 import Calculator4
 from src.drivers.numpy_handler import NumpyHandler
 from src.drivers.interfaces.driver_handler_interface import DriverHandlerInterface
 
@@ -10,37 +10,38 @@ class MockRequest:
         self.json = body
 
 class MockDriverHandler(DriverHandlerInterface):
+    def average(self, numbers: List[float]) -> float:
+        return 3 # returns a random number
     def standard_deviation(self, numbers: List[float]) -> float:
         return 3 # returns a random number
     def variance(self, numbers: List[float]) -> float:
         return 1568.16 # returns a random number
-    def average(self, numbers: List[float]) -> float:
-        return 3 # returns a random number
+
 
 class MockDriverHandlerError(DriverHandlerInterface):
+    def average(self, numbers: List[float]) -> float:
+        return 3 # returns a random number
     def standard_deviation(self, numbers: List[float]) -> float:
         return 3 # returns a random number
     def variance(self, numbers: List[float]) -> float:
-        return 5 # returns a random number
-    def average(self, numbers: List[float]) -> float:
-        return 3 # returns a random number
+        return 1568.16 # returns a random number
 
-def test_calculate_with_variance_error():
-    mock_request = MockRequest({"numbers": [1, 2, 3, 4, 5]})
+def test_calculate_with_body_format_error():
+    mock_request = MockRequest({"numberss": [1, 2, 3, 4, 5]})
 
     driver = MockDriverHandlerError()
-    calculator3 = Calculator3(driver)
+    calculator4 = Calculator4(driver)
     
     with raises(Exception) as excinfo:
-        calculator3.calculate(mock_request)
+        calculator4.calculate(mock_request)
 
-    assert str(excinfo.value) == "Failed to calculate variance, multiplication is larger"
+    assert str(excinfo.value) == "Missing 'numbers' field in request body"
 
 def test_calculate():
-    mock_request = MockRequest({"numbers": [1, 1, 1, 1, 100]})
+    mock_request = MockRequest({"numbers": [2, 5, 9, 10]})
 
     driver = MockDriverHandler()
-    calculator3 = Calculator3(driver)
-    response = calculator3.calculate(mock_request)
+    calculator4 = Calculator4(driver)
+    response = calculator4.calculate(mock_request)
     
-    assert response == {'data': {'Calculator': 3, 'value': 1568.16, 'success': True}}
+    assert response == {'data': {'Calculator': 4, 'value': 3, 'success': True}}
